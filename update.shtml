@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Soccer Match</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+
+<div id="soccer-match" class="container m-3">
+
+	<form id="myform" v-on:submit.prevent="addMatch()" class="border mt-1 bg-light">
+		<div class="d-flex flex-row">
+			<div class="p-2"><b>Add Match</b></div>
+			<div class="p-2"><b>Week:</b> {{ next_match.week_id }} </div>
+		</div>
+		<div class="d-inline-flex flex-wrap">
+			<div class="p-2"><b>Match:</b> {{ next_match.match_num }}</div>
+			
+				<input type="hidden" ref="match_num" :value="next_match.match_num">
+				<input type="hidden" ref="week_id" :value="next_match.week_id">
+			<div class="p-2">
+				<select ref="team_a_id" >
+					<option v-for="(team, index) in teamcolors" :value="team.teamid">
+						{{ team.name }}
+					</option>
+				</select>
+			</div>
+			<div class="p-2"> VS </div>
+			<div class="p-2">
+				<select ref="team_b_id" >
+					<option v-for="(team, index) in teamcolors" :value="team.teamid">
+						{{ team.name }}
+					</option>
+				</select>
+			</div>
+			<div class="p-2"><button type="submit" class="btn btn-primary btn-sm">+</button></div>
+		</div>
+	</form>
+
+
+<form id="myform" v-on:submit.prevent="addGoal()" class="border mt-1">
+
+	<div class="d-flex flex-row">
+		<div class="p-2"><b>Add Goal</b></div>
+	</div>
+	<div class="d-flex flex-wrap">
+		<div class="p-2">
+			<b>Match:</b>
+			<select ref="match_id_goal" v-on:change="updateStatus()">
+				<option v-for="(item, index) in all_match"  :value="index">
+					{{ item.match_num }}
+				</option>
+			</select>
+		</div>
+
+		<div class="p-2">
+			<b>status:</b>
+			<select ref="status_id_goal" v-on:change="updateStatus()" >
+				<option value="0" >Normal</option>
+				<option value="1" >ยืมตัว</option>
+				<option value="2" >OG</option>
+				<option value="3" >Assist</option>
+				<option value="4" >ยืมตัว Assist</option>
+			</select>
+		</div>
+
+		<div class="p-2">
+			<b>scorer:</b>
+			<select ref="member_id_goal" >
+				<option v-for="(member, index) in member" :value="index" >
+					{{ member.alias }} - {{ member.color}}
+				</option>
+			</select>
+		</div>
+		
+
+		<div class="p-2">
+			<b>Team:</b>
+			<select ref="team_id" >
+				<option v-for="(team, index) in teamcolors" :value="team.teamid">
+					{{ team.name }}
+				</option>
+			</select>
+		</div>
+
+		<div class="p-2"><button type="submit" class="btn btn-primary btn-sm">+</button></div>
+	</div>
+</form>
+
+
+<div class="d-flex flex-row"><b>Match Detail</b></div>
+	
+<div v-for="(item, index) in all_match" :key="index" class="d-flex flex-column border mb-2">
+	
+	
+	<div :class="index % 2 == 0 ? 'bg-white' : 'bg-light'">
+	<div class="d-flex flex-row ml-2 mt-1 mb-2">
+		<div class="d-inline pr-1 pl-1 mr-1 bg-info text-white">{{ all_match[matchCount + 1 - index].match_num }}.</div>
+		{{ all_match[matchCount + 1 - index].team_a_color }} 
+		{{ all_match[matchCount + 1 - index].team_a_goal }} - {{ all_match[matchCount + 1 - index].team_b_goal }} 
+		 {{ all_match[matchCount + 1 - index].team_b_color }}  
+		 <div v-if="index == 1">
+		 <div :value="all_match[matchCount + 1 - index].id" class="pr-1 pl-1 ml-1 mr-1 bg-danger text-white" v-on:click="removeMatchbyID(all_match[matchCount + 1 - index].id)">x</div>
+		</div>
+	</div>
+	
+	<div class="d-flex flex-wrap mt-1 ml-2 align-middle">
+		<div class="d-inline pr-1 pl-1 mr-1 bg-success text-white">G:</div>
+			<div v-for="(goal, index1) in all_match[matchCount + 1 - index].goal" :key="all_match[matchCount + 1 - index].goal.goal_id" >	
+				<div v-if="goal.goal_status == 2">
+					{{ goal.name }} (OG) <div :value="goal.goal_id" class="d-inline pr-1 pl-1 mr-1 bg-danger text-white" v-on:click="removeGoalbyID(goal.goal_id)">x</div>
+				</div> 
+				<div v-else>
+					<div v-if="goal.goal_status != 3">
+					{{ goal.name }}  <div :value="goal.goal_id" class="d-inline pr-1 pl-1 mr-1 bg-danger text-white" v-on:click="removeGoalbyID(goal.goal_id)">x</div>
+					</div>
+				</div>   
+			</div>
+	</div>
+
+	<div class="d-flex flex-row mt-1 ml-2 mb-2">
+		<div class="d-inline pr-1 pl-1 mr-1 bg-primary text-white">A:</div>
+			<div v-for="(goal, index1) in all_match[matchCount + 1 - index].goal" :key="all_match[matchCount + 1 - index].goal.goal_id" >	
+				<div v-if="goal.goal_status == 3">
+					{{ goal.name }} (A)<div :value="goal.goal_id" class="d-inline pr-1 pl-1 mr-1 bg-danger text-white" v-on:click="removeGoalbyID(goal.goal_id)">x</div>
+				</div>  
+			</div>
+	</div>
+	</div>
+
+	
+
+
+</div>
+
+<table class="table table-striped">
+      <tbody>
+		<tr>
+			<b>Week Table</b>
+		</tr>
+		<tr>
+			<table  class="table table-striped">
+				<thead class="thead-dark">
+					<tr>
+							<td scope="col"> Team </td>
+							<td scope="col"> W </td>
+							<td scope="col"> D </td>
+							<td scope="col"> L </td>
+							<td scope="col"> G </td>
+							<td scope="col"> A </td>
+							<td scope="col"> PTS </td>
+					</tr>
+				</thead>
+				<tbody>		
+				
+					<tr v-for="(item, index) in tableweek" :key="index">
+						<td >{{ item.color }} </td>
+						<td> {{ item.w }} </td>
+						<td> {{ item.d }} </td>
+						<td> {{ item.l }} </td>
+						<td> {{ item.G }} </td>
+						<td> {{ item.A }} </td>
+						<td> {{ item.pts }} </td>	
+					</tr>
+				</tbody>
+			</table>
+		</tr>
+      </tbody>
+</table>
+
+</div>
+
+<script id="rendered-js">
+
+new Vue({
+  el: '#soccer-match',
+  data: {
+    newTodoSelect: '',
+	isLoan: false,
+	matchCount: 0,
+	Txtgoal: '',
+	Txtassist: '',
+	tableweek: [],
+	member: [],
+	loan: [],
+	info: [],
+	next_match: [],
+	output: [],
+	all_match: [],
+	teamcolors: '',
+	base_url: 'https://api.revemu.org/',
+    todos: []
+  },
+    mounted () {
+		
+    this.refreshMatch(0);
+	
+  },
+  methods: {
+    addNewTodo: function () {
+      this.todos.push({
+        id: this.newTodoSelect.id,
+        title: this.newTodoSelect.name
+      })
+	  console.log(this.newTodoSelect.id + ' ' + this.newTodoSelect.name)
+    },
+	refreshMatch: function (weeknum, update_team_lists = true, matchindex=0) {
+		axios
+		.get( this.base_url + '/get_info.php?cmd=get_last_matchweek&weeknum=' + weeknum)
+		.then(response => {       
+			this.info = response.data ;
+			this.teamcolors = this.info.team_week ;
+			this.next_match = this.info.next_match ;
+			this.all_match = this.info.all_match ;
+			this.tableweek = this.info.tableweek ;
+			let matchCount =  0 ;
+			if (this.all_match) {
+				this.matchCount = Object.keys(this.all_match).length ;
+				matchCount =   this.matchCount ;
+			} else {
+				this.matchCount = 0 ;
+			}
+			
+			//console.log("All mem:" + info.allmembers)
+			if (update_team_lists) {
+				//this.member = this.info.allmembers ;
+				if (matchindex > 0) {
+					this.member = this.info.allmembers.filter(allmembers => allmembers.team_id == this.all_match[matchindex].team_a_id || allmembers.team_id == this.all_match[matchindex].team_b_id) ;
+					//this.loan = this.info.allmembers.filter(allmembers => allmembers.team_id != this.all_match[matchindex].team_a_id && allmembers.team_id != this.all_match[matchindex].team_b_id) ;
+				} else {
+					if (this.matchCount > 0) {
+						this.member = this.info.allmembers.filter(allmembers => allmembers.team_id == this.all_match[matchCount].team_a_id || allmembers.team_id == this.all_match[matchCount].team_b_id) ;
+						//this.loan = this.info.allmembers.filter(allmembers => allmembers.team_id != this.all_match[matchCount].team_a_id && allmembers.team_id != this.all_match[matchCount].team_b_id) ;
+					} else {
+						this.member = this.info.allmembers ;
+						//this.loan = this.member ;
+					}
+				}
+			}
+			//console.log("refreshed request")
+			//console.log("All match count: " + this.matchCount)
+			//console.log("Match 0: team_a: " + this.all_match[this.matchCount].team_a_id )
+		})
+
+		.catch(e => {
+			//this.errors.push(e);
+			console.log("Errors : " + e);
+		});
+    },
+	addMatch () {
+	  
+	  var formdata = new FormData();
+		formdata.append('matchnum', this.$refs.match_num.value);
+		formdata.append('weekid', this.$refs.week_id.value);
+		formdata.append('teamaid', this.$refs.team_a_id.value);
+		formdata.append('teambid', this.$refs.team_b_id.value);
+		
+		axios
+		.post(this.base_url + '/add_match.php', formdata)
+
+		.then(response => {       
+			this.output = response ;
+			this.refreshMatch(0, true) ;
+		}) 
+		//console.log("id = " + this.info.team_week.team24.id);
+		
+	  
+    }, 
+	addGoal() {
+	  
+	  var formdata = new FormData();
+		
+		let memberindex ;
+		let current_team = [] ;
+
+		let statusid = this.$refs.status_id_goal.value ;
+		let teamid = 0 ;
+		
+		console.log('status id change to = ' + statusid) ;
+		/*
+		if (statusid == 1 || statusid == 4) {
+			memberindex = this.$refs.member_id_loan.value ;
+			current_team = this.loan
+			if (statusid == 1) {
+				teamid = this.$refs.team_id.value
+			} else {
+				statusid = 3 ;
+			}
+			
+		} else {
+			memberindex = this.$refs.member_id_goal.value ;
+			current_team = this.member
+		}
+
+		if (teamid == 0) {
+			teamid = current_team[memberindex].team_id
+		}
+		*/
+		memberindex = this.$refs.member_id_goal.value ;
+		current_team = this.member ;
+
+		if ( (statusid == 1) || (statusid == 2) ) {
+			teamid = this.$refs.team_id.value
+		} else {
+			if (statusid == 4) {
+				statusid = 3 ;
+			}
+			teamid = current_team[memberindex].team_id
+		}
+		
+		
+
+		console.log('status id change to = ' + statusid) ;
+
+		
+
+		formdata.append('teamid',teamid);
+
+		console.log('Scorer = ' + current_team[memberindex].alias ) ;
+		formdata.append('memberid', current_team[memberindex].id);
+		console.log("isloan check: " + this.isLoan + " " + this.$refs.member_id_goal.value) ;
+
+		//formdata.append('memberid', this.$refs.member_id_goal.value);
+		//formdata.append('memberid', memberindex);
+		formdata.append('weekid', this.$refs.week_id.value);
+		//formdata.append('statusid', this.$refs.status_id_goal.value);
+		formdata.append('statusid', statusid);
+		
+		//let memberindex = this.$refs.member_id_goal.value ;
+		let matchindex =  this.$refs.match_id_goal.value ;
+		console.log('match index = ' + this.all_match[matchindex].id) ;
+
+		formdata.append('matchid', this.all_match[matchindex].id);
+		
+		
+		
+		
+		formdata.append('memberid', current_team[memberindex].id);
+		
+		axios
+		.post(this.base_url + '/add_match.php', formdata)
+
+		.then(response => {       
+			this.output = response ;
+			this.refreshMatch(0, false) ;
+		}) 
+		
+		//console.log("id = " + this.info.team_week.team24.id);
+		
+	  
+    }, 
+	updateStatus() {
+	  let statusid = this.$refs.status_id_goal.value
+	  let matchindex = this.$refs.match_id_goal.value
+	  console.log("status + matchindex = " + statusid + ' ' + matchindex)
+	  /*	
+	  axios
+		.get(this.base_url + '/get_info.php?cmd=get_team_members&matchid=' + this.all_match[matchindex].id)
+		.then(response => {       
+			this.member = response.data ;
+			this.refreshMatch(0, false) ;
+		})
+		*/
+		if (this.matchCount > 0) {
+			if (statusid == 1 || statusid == 4) {
+
+				
+				this.member = this.info.allmembers.filter(allmembers => allmembers.team_id != this.all_match[matchindex].team_a_id && allmembers.team_id != this.all_match[matchindex].team_b_id) ;
+				//this.member = this.info.allmembers.filter(allmembers => allmembers.team_id == this.all_match[this.matchCount].team_a_id || allmembers.team_id == this.all_match[this.matchCount].team_b_id) ;
+				//this.refreshMatch(0, true, matchindex) ;
+			} else {
+				this.member = this.info.allmembers.filter(allmembers => allmembers.team_id == this.all_match[matchindex].team_a_id || allmembers.team_id == this.all_match[matchindex].team_b_id) ;
+			}
+			this.refreshMatch(0, false, matchindex) ;
+		}
+	  	//console.log('match id change to' + this.$refs.match_id_goal.value) ;
+	  
+    }, 
+	updateMember() {
+	  let matchindex = this.$refs.match_id_goal.value
+	  /*	
+	  axios
+		.get(this.base_url + '/get_info.php?cmd=get_team_members&matchid=' + this.all_match[matchindex].id)
+		.then(response => {       
+			this.member = response.data ;
+			this.refreshMatch(0, false) ;
+		})
+		*/
+		if (this.matchCount > 0) {
+			//this.member = this.info.allmembers.filter(allmembers => allmembers.team_id == this.all_match[this.matchCount].team_a_id || allmembers.team_id == this.all_match[this.matchCount].team_b_id) ;
+			this.refreshMatch(0, true, matchindex) ;
+		}
+	  
+	  	console.log('match id change to' + this.$refs.match_id_goal.value) ;
+	  
+    }, 
+	removeGoalbyID: function (goal_id) {
+	  
+	  let goalid = goal_id ;
+	  var formdata = new FormData();
+		formdata.append('goalid', goalid);
+		formdata.append('weekid', this.$refs.week_id.value);
+		
+		axios
+		.post(this.base_url + '/add_match.php', formdata)
+
+		.then(response => {       
+			this.output = response ;
+			this.refreshMatch(0,false) ;
+		}) 
+		
+	  console.log('goal id = ' + goalid) ;
+	  
+    }, 
+	removeGoal: function (event) {
+	  
+	  let goalid = event.target.value ;
+	  var formdata = new FormData();
+		formdata.append('goalid', goalid);
+		formdata.append('weekid', this.$refs.week_id.value);
+		
+		axios
+		.post(this.base_url + '/add_match.php', formdata)
+
+		.then(response => {       
+			this.output = response ;
+			this.refreshMatch(0,false) ;
+		}) 
+		
+	  console.log('goal id = ' + goalid) ;
+	  
+    }, 
+	removeMatchbyID: function (match_id) {
+	  
+	  let matchid = match_id ;
+	  var formdata = new FormData();
+		formdata.append('matchid', matchid);
+		formdata.append('cmd', 'remove');
+		formdata.append('weekid', this.$refs.week_id.value);
+		
+		axios
+		.post(this.base_url + '/add_match.php', formdata)
+
+		.then(response => {       
+			this.output = response ;
+			this.refreshMatch(0) ;
+		}) 
+		
+	  console.log('match id = ' + matchid) ;
+	  
+    },
+	removeMatch: function (event) {
+	  
+	  let matchid = event.target.value ;
+	  var formdata = new FormData();
+		formdata.append('matchid', matchid);
+		formdata.append('cmd', 'remove');
+		formdata.append('weekid', this.$refs.week_id.value);
+		
+		axios
+		.post(this.base_url + '/add_match.php', formdata)
+
+		.then(response => {       
+			this.output = response ;
+			this.refreshMatch(0) ;
+		}) 
+		
+	  console.log('match id = ' + matchid) ;
+	  
+    }
+	
+	
+  }
+})
+</script>
+</body>
+</html>
