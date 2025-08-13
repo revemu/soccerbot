@@ -25,6 +25,7 @@ require_once('./cmd.php');
 require_once("./match_query.php");
 require_once("./flex.php");
 require_once("./member.php");
+require_once("./config.inc");
 require __DIR__ . '/vendor/autoload.php';
 
 
@@ -39,8 +40,7 @@ function hasLetterAndNumber($str) {
     return $hasLetter && $hasNumber;
 }
 
-$channelAccessToken = 'RLy8qoVKhlAlmNhHEvZ/D8OLdz44FyukW4Uo9FQwbUh5oYNsghDXda4WxCS7MKW9BawEgRcyDAWGNGFPN8sR81q197MwlLOfcKFotdZjZ3k+Unf05Pxvtuyw1g/tQNKDXtMDyn06klKSeJL0EvQsuAdB04t89/1O/w1cDnyilFU=';
-$channelSecret = '522609b6e9aa17df527d07bfa1f3e651';
+
 $log = new Logger("log.txt");
 $log->setTimestamp("Y-m-d H:i:s");
 
