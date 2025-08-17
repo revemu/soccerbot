@@ -41,9 +41,9 @@ function hasLetterAndNumber($str) {
 
 $log = new Logger("log.txt");
 $log->setTimestamp("Y-m-d H:i:s");
-include "config.inc" ;
-global $channelAccessToken;
-global $channelSecret;
+include("config.inc") ;
+//global $channelAccessToken;
+//global $channelSecret;
 $log->putLog("token: " . $channelAccessToken . ", secret: " . $channelSecret,true);
 $client = new LINEBotTiny($channelAccessToken, $channelSecret);
 foreach ($client->parseEvents() as $event) {
