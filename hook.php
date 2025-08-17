@@ -406,9 +406,6 @@ foreach ($client->parseEvents() as $event) {
 										}
 										
 										break ;
-									case 'newweek':
-										$mystr = "add $end" ;
-										break ;
 									default :
 										$mystr = "report $end" ;
 										break ;
