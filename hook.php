@@ -360,7 +360,7 @@ foreach ($client->parseEvents() as $event) {
 						case '/':
 							$chat_type .= "[cmd] - " ;
 							$end = substr(trim($str),1) ;
-							$searchCmd = ["pay", "team", "1", "topscorer", "topassist", "topog", "register", "noteam", "squadweek", "matchweek", "tableweek", "randomfullteam"];
+							$searchCmd = ["pay", "team", "1", "topscorer", "topassist", "topog", "register", "noteam", "squadweek", "matchweek", "tableweek", "randomfullteam", "newweek"];
 
 							// Construct a regex pattern for multiple alternatives
 							$pattern = '/(' . implode('|', array_map('preg_quote', $searchCmd)) . ')/i';
@@ -405,6 +405,9 @@ foreach ($client->parseEvents() as $event) {
 											return ;
 										}
 										
+										break ;
+									case 'newweek':
+										$mystr = "add $end" ;
 										break ;
 									default :
 										$mystr = "report $end" ;
