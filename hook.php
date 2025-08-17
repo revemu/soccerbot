@@ -46,7 +46,7 @@ $log->setTimestamp("Y-m-d H:i:s");
 //$channelAccessToken = getAccessToken() ;
 //$channelSecret = 
 //global $channelSecret;
-$log->putLog("token: " . $channelAccessToken . ", secret: " . $channelSecret,true);
+//$log->putLog("token: " . $channelAccessToken . ", secret: " . $channelSecret,true);
 $client = new LINEBotTiny($channelAccessToken, $channelSecret);
 foreach ($client->parseEvents() as $event) {
 	
