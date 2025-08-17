@@ -25,7 +25,7 @@ require_once('./cmd.php');
 require_once("./match_query.php");
 require_once("./flex.php");
 require_once("./member.php");
-require_once("./config.inc");
+require_once("./config.php");
 require __DIR__ . '/vendor/autoload.php';
 
 
@@ -39,7 +39,6 @@ function hasLetterAndNumber($str) {
     // Return true if both conditions are met
     return $hasLetter && $hasNumber;
 }
-
 
 $log = new Logger("log.txt");
 $log->setTimestamp("Y-m-d H:i:s");
@@ -357,15 +356,26 @@ foreach ($client->parseEvents() as $event) {
 						case '/':
 							$chat_type .= "[cmd] - " ;
 							$end = substr(trim($str),1) ;
-							$searchCmd = ["pay", "team", "1", "topscorer", "topassist", "topog", "register", "noteam", "teamweek", "matchweek", "tableweek", "randomfullteam"];
+							$searchCmd = ["pay", "team", "1", "topscorer", "topassist", "topog", "register", "noteam", "squadweek", "matchweek", "tableweek", "randomfullteam"];
 
 							// Construct a regex pattern for multiple alternatives
 							$pattern = '/(' . implode('|', array_map('preg_quote', $searchCmd)) . ')/i';
 							if (preg_match($pattern, $str, $cmd_matches)) {
 								$is_mention = false ; 
-								if (strpos($str, "@", 1) !== false) {
+								$pos = strpos($str, "@", 1) ;
+								if ($pos !== false) {
+									$member_name = substr($str,$pos) ;
 									$str = str_replace("'", "\'",$str);
 									$is_mention = true ; 
+									$response = query_member_id($member_name) ;
+									if ($response[0]) {
+										$member_id = $response[1] ;
+										$log->putLog($chat_type . "name: $member_name id: $member_id" ,true) ;
+									} else {
+										return ;
+									}
+									
+									
 								}
 								switch ($cmd_matches[0]) {
 									case 'pay':
@@ -394,11 +404,14 @@ foreach ($client->parseEvents() as $event) {
 										break ;
 									default :
 										$mystr = "report $end" ;
+										break ;
 								}
 
 								//$str = "@soccerbot " . $mystr ;
-								//$log->putLog($chat_type . $new_cmd ,true) ;
-							} 
+								//$log->putLog($chat_type . $mystr ,true) ;
+							} else {
+								$mystr = $end ;
+							}
 							$str = "@soccerbot " . $mystr ;
 							$mylog .= " => " . $str;
 							break ;

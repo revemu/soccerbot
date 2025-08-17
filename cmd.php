@@ -16,6 +16,7 @@ function cmd_process($argc, $cmdstr = '', $member_id = 0, $Talker = 'NoName', $e
 		$txtlog = "" ;
 		//$txtlog =  "cmd : " . $cmd . " " . $data . "\n" ;
 		//if ($data != "") {
+		//$log->putLog($cmdstr,true) ;
 		$result["type"] = 0;
 		switch($cmd) {
 			case '+1':
@@ -327,6 +328,7 @@ function cmd_process($argc, $cmdstr = '', $member_id = 0, $Talker = 'NoName', $e
 					if ($pos === false) { break ; } else {
 						$member_name = substr($cmdstr,$pos) ;
 					}
+					$log->putLog("in cmd: $cmdstr") ;
 					$weeknum = 0 ;
 					$output["type"] = 0 ;
 					//if (isset($argc[3])) {
@@ -887,7 +889,7 @@ EOT;
 					
 					//$output["msg"] = getFlexHeader($txtlog) ;
 					
-			} elseif ($check_type == "teamweek") {
+			} elseif ($check_type == "teamweek" || $check_type == "squadweek") {
 						
 						$weeknum = 0 ;
 						if (isset($argc[3])) {
