@@ -25,7 +25,7 @@ require_once('./cmd.php');
 require_once("./match_query.php");
 require_once("./flex.php");
 require_once("./member.php");
-include "config.php" ;
+include "config1.php" ;
 require __DIR__ . '/vendor/autoload.php';
 
 
