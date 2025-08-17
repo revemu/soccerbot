@@ -156,66 +156,24 @@ function cmd_process($argc, $cmdstr = '', $member_id = 0, $Talker = 'NoName', $e
 					$txtlog .= query_top_mvp();
 				} 
 				break ;
-			case 'add':
-				$check_type = $data ;
-				if ($check_type == "week") {
-					//$dateweek = $argc[3] ;
-					$ts = strtotime('next saturday');
-					$dateweek = date('Y-m-d', $ts);
-					$satdate =  date('d', $ts);
-					$monthnum =  date('m', $ts);
-					$year =  date('Y', $ts);
-					$monthname = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."] ;
-					$check = query_week_exist($dateweek) ;
-					if ($check[0] === true) {
-						$response = add_week($dateweek, $year) ;
-						if ($response[0] === true) {
-							$txtlog .= "ลงชื่อเตะบอล เสาร์ที่ " . $satdate . " " .  $monthname[$monthnum-1] . " ได้ครับ" ;
-						} 
-					} else {
-						$txtlog .= query_all_registered_members2(0);
-					}
-				} elseif ($check_type == "match") {
-					//add match #match_num #color #color #weeknum(0) 
-					
-					$matchNum = $argc[3] ;
-					$teamA = $argc[4] ;
-					$teamB = $argc[5] ;
-					if(isset($argc[6])) {
-						$weeknum = $argc[6] ;
-					} else {
-						$weeknum = 0 ;
-					}
-					$result = check_match_week($matchNum, $weeknum) ;
-					if ($result[0]) {
-						$txtlog .= $result[1] ;
-					} else {
-						$response = add_match_week($matchNum,$teamA,$teamB ,$weeknum) ;
-						$txtlog .= $response[1] ;
-					}
-				} elseif ($check_type == "goal") {
-					//add goal #match_num #weeknum(0) #name #color() 
-					
-					$matchNum = $argc[3] ;
-					$name= $argc[5] ;
-					
-					if(isset($argc[4])) {
-						$weeknum = $argc[4] ;
-					} else {
-						$weeknum = 0 ;
-					}
-					
-					if (isset($argc[6])) {
-						$teamColor = $argc[6] ;
-					} else {
-						$teamColor = "" ;
-					}
-					//function add_match_goal_week($matchNum,$name,$weeknum = 0)
-					$result = add_match_goal_week($matchNum, $name, $weeknum, $teamColor) ;
-					$txtlog .= $result[1] ;
-					//$txtlog .= "add $matchNum, $name, $weeknum, $teamColor\n" ;
+			case 'newweek':
+				//$check_type = $data ;
+				$ts = strtotime('next saturday');
+				$dateweek = date('Y-m-d', $ts);
+				$satdate =  date('d', $ts);
+				$monthnum =  date('m', $ts);
+				$year =  date('Y', $ts);
+				$monthname = ["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."] ;
+				$check = query_week_exist($dateweek) ;
+				if ($check[0] === true) {
+					$response = add_week($dateweek, $year) ;
+					if ($response[0] === true) {
+						$txtlog .= "ลงชื่อเตะบอล เสาร์ที่ " . $satdate . " " .  $monthname[$monthnum-1] . " ได้ครับ" ;
+					} 
+				} else {
+					$txtlog .= query_all_registered_members2(0);
 				}
-				break ;
+				
 			case '+team1' :
 			case '+team2' :
 			case '+team3' :
