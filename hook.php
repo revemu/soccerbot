@@ -57,7 +57,7 @@ foreach ($client->parseEvents() as $event) {
 			//$log->putLog(print_r($event,true));
             switch ($message['type']) {
 				case 'image':
-
+					
 					$start_time = microtime(TRUE);
 					$curl = curl_init();
 					curl_setopt_array($curl, array(
@@ -77,7 +77,8 @@ foreach ($client->parseEvents() as $event) {
 					$log->putLog("read qr api time:" . $elapsed);
 					$log->putLog($apijson);
 
-					return ;
+					//return ;
+					
 
 					$chat_type = "[private_chat] - " ;
 					$LineUserId = $event['source']['userId'] ;
@@ -136,7 +137,7 @@ foreach ($client->parseEvents() as $event) {
 					//$data = base64_encode($imageData);
 					
 					//use Zxing CMD;
-					$start_time = microtime(TRUE);
+					//$start_time = microtime(TRUE);
 					$command = "zbarimg -q --raw " . $filePath;
     				$decodedData = shell_exec($command);
 					$ws = "\n";
@@ -145,7 +146,7 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("qr_read cmd: " . $decodedData . " time:" . $elapsed);
 					//
-					//break ;
+					return ;
 
 					/*
 					//use Zxing\QrReader;
