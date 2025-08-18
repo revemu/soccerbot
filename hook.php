@@ -106,6 +106,8 @@ foreach ($client->parseEvents() as $event) {
 						}
 						
 					}
+
+					$log->putLog($chat_type . "$DisplayName sent image");
 					/*
 					$url_content = "https://api-data.line.me/v2/bot/message/" .  $message['id'] . "/content";
 					//$log->putLog($url_content);
