@@ -105,6 +105,7 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("read qr api time:" . $elapsed);
 					$res = json_decode($apijson) ;
+					$log->putLog($res);
 					$decodedData = "" ;
 					if ($res->status == 1) {
 						$decodedData = $res->qr ;
@@ -112,7 +113,7 @@ foreach ($client->parseEvents() as $event) {
 					} else {
 						return ;
 					}
-					//return ;
+					return ;
 					/*
 					$url_content = "https://api-data.line.me/v2/bot/message/" .  $message['id'] . "/content";
 					//$log->putLog($url_content);
@@ -291,11 +292,11 @@ foreach ($client->parseEvents() as $event) {
 						}
 					}
 					
-					if (is_file($filePath)) {
+					/*if (is_file($filePath)) {
 						$command = "rm -f " . $filePath;
 						//unlink($filePath) ;
 						$remove = shell_exec($command);
-					}
+					}*/
 
 					break ;
                 case 'text':
