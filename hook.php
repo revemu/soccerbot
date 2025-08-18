@@ -58,30 +58,7 @@ foreach ($client->parseEvents() as $event) {
             switch ($message['type']) {
 				case 'image':
 					
-					$start_time = microtime(TRUE);
-					$curl = curl_init();
-					curl_setopt_array($curl, array(
-					CURLOPT_URL => "https://api.revemu.org/webhook?msgid=" . $message['id'],
-					CURLOPT_RETURNTRANSFER => true,
-					CURLOPT_ENCODING => '',
-					CURLOPT_MAXREDIRS => 10,
-					CURLOPT_TIMEOUT => 0,
-					CURLOPT_FOLLOWLOCATION => true,
-					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-					CURLOPT_CUSTOMREQUEST => 'GET',
-					));
-					$apijson = curl_exec($curl);
-					curl_close($curl);
-					$end_time = microtime(TRUE);
-					$elapsed = $end_time - $start_time ;
-					$log->putLog("read qr api time:" . $elapsed);
-					$res = json_decode($apijson) ;
-					$decodedData = "" ;
-					if ($res->status == 1) {
-						
-						$decodedData = $res->qr ;
-						$log->putLog($decodedData);
-					}
+					
 					
 
 					//return ;
@@ -108,6 +85,33 @@ foreach ($client->parseEvents() as $event) {
 					}
 
 					$log->putLog($chat_type . "$DisplayName sent image");
+
+					$start_time = microtime(TRUE);
+					$curl = curl_init();
+					curl_setopt_array($curl, array(
+					CURLOPT_URL => "https://api.revemu.org/webhook?msgid=" . $message['id'],
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING => '',
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_TIMEOUT => 0,
+					CURLOPT_FOLLOWLOCATION => true,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST => 'GET',
+					));
+					$apijson = curl_exec($curl);
+					curl_close($curl);
+					$end_time = microtime(TRUE);
+					$elapsed = $end_time - $start_time ;
+					$log->putLog("read qr api time:" . $elapsed);
+					$res = json_decode($apijson) ;
+					$decodedData = "" ;
+					if ($res->status == 1) {
+						$decodedData = $res->qr ;
+						$log->putLog($decodedData);
+					} else {
+						return ;
+					}
+
 					/*
 					$url_content = "https://api-data.line.me/v2/bot/message/" .  $message['id'] . "/content";
 					//$log->putLog($url_content);
