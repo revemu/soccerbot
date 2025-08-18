@@ -105,13 +105,14 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("read qr api time:" . $elapsed);
 					$res = json_decode($apijson) ;
+					$log->putLog($res);
 					$decodedData = "" ;
 					if ($res->status == 200) {
 						//$decodedData = $res->data->payload ;
 						//$log->putLog($decodedData);
 						//$log->putLog($apijson);
 						//$res = json_decode($apijson) ;
-						$log->putLog($res);
+						
 						$tdate = strtotime($res->data->date);
 						$tdate = date("Y-m-d H:i:s", $tdate);
 						$amount = $res->data->amount->amount ;
