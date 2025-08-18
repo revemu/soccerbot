@@ -76,8 +76,11 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("read qr api time:" . $elapsed);
 					$res = json_decode($apijson) ;
+					$decodedData = "" ;
 					if ($res->status == 1) {
-						$log->putLog($apijson);
+						
+						$decodedData = $res->qr ;
+						$log->putLog($decodedData);
 					}
 					
 
@@ -103,6 +106,7 @@ foreach ($client->parseEvents() as $event) {
 						}
 						
 					}
+					/*
 					$url_content = "https://api-data.line.me/v2/bot/message/" .  $message['id'] . "/content";
 					//$log->putLog($url_content);
 					$log->putLog($chat_type . "$DisplayName sent image");
@@ -111,18 +115,6 @@ foreach ($client->parseEvents() as $event) {
 					$uploadDirectory = '/var/www/html/img_line/'; // e.g., 'images/'
 					$fileName = uniqid() . '.jpg'; // Generate a unique filename, or use a more descriptive name
 					$filePath = $uploadDirectory . $fileName;
-					
-					/*
-					//save image via cmd
-					$start_time = microtime(TRUE);
-					$command = "curl -v -X GET " . $url_content . " -H 'Authorization: Bearer " . $channelAccessToken . "' --output " . $filePath ;
-					$log->putLog($command);
-					$saveImg = shell_exec($command);
-					$end_time_time = microtime(TRUE);
-					$elapsed = $end_time_time - $start_time ;
-					$log->putLog("save image cmd: " . $decodedData . " time:" . $elapsed);
-					//
-					*/
 
 					//save image via php
 					$start_time = microtime(TRUE);
@@ -150,6 +142,7 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("qr_read cmd: " . $decodedData . " time:" . $elapsed);
 					//
+					/*
 					return ;
 
 					/*
