@@ -112,7 +112,7 @@ foreach ($client->parseEvents() as $event) {
 					} else {
 						return ;
 					}
-					return ;
+					//return ;
 					/*
 					$url_content = "https://api-data.line.me/v2/bot/message/" .  $message['id'] . "/content";
 					//$log->putLog($url_content);
