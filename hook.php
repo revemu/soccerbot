@@ -57,7 +57,7 @@ foreach ($client->parseEvents() as $event) {
 			//$log->putLog(print_r($event,true));
             switch ($message['type']) {
 				case 'image':
-					
+					/*
 					$start_time = microtime(TRUE);
 					$curl = curl_init();
 					curl_setopt_array($curl, array(
@@ -78,7 +78,7 @@ foreach ($client->parseEvents() as $event) {
 					$log->putLog($apijson);
 
 					//return ;
-					
+					*/
 
 					$chat_type = "[private_chat] - " ;
 					$LineUserId = $event['source']['userId'] ;
