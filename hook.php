@@ -57,6 +57,28 @@ foreach ($client->parseEvents() as $event) {
 			//$log->putLog(print_r($event,true));
             switch ($message['type']) {
 				case 'image':
+
+					$start_time = microtime(TRUE);
+					$curl = curl_init();
+					curl_setopt_array($curl, array(
+					CURLOPT_URL => "https://api.revemu.org/webhook?msgid=" . $message['id'],
+					CURLOPT_RETURNTRANSFER => true,
+					CURLOPT_ENCODING => '',
+					CURLOPT_MAXREDIRS => 10,
+					CURLOPT_TIMEOUT => 0,
+					CURLOPT_FOLLOWLOCATION => true,
+					CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+					CURLOPT_CUSTOMREQUEST => 'GET',
+					));
+					$apijson = curl_exec($curl);
+					curl_close($curl);
+					$end_time = microtime(TRUE);
+					$elapsed = $end_time - $start_time ;
+					$log->putLog("read qr api time:" . $elapsed);
+					$log->putLog($apijson);
+
+					return ;
+
 					$chat_type = "[private_chat] - " ;
 					$LineUserId = $event['source']['userId'] ;
 					$response = get_name_by_lineId($LineUserId) ;
