@@ -89,7 +89,8 @@ foreach ($client->parseEvents() as $event) {
 					$start_time = microtime(TRUE);
 					$curl = curl_init();
 					curl_setopt_array($curl, array(
-					CURLOPT_URL => "https://api.revemu.org/webhook?msgid=" . $message['id'],
+					//CURLOPT_URL => "https://api.revemu.org/webhook?msgid=" . $message['id'],
+					CURLOPT_URL => "http://localhost:3000/hook?msgid=" . $message['id'],
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_ENCODING => '',
 					CURLOPT_MAXREDIRS => 10,
