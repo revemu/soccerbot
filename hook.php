@@ -105,7 +105,7 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("read qr api time:" . $elapsed);
 					$res = json_decode($apijson) ;
-					$log->putLog($res->data);
+					$log->putLog(print_r($res,true));
 					$decodedData = "" ;
 					if ($res->status == 200) {
 						//$decodedData = $res->data->payload ;
