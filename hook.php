@@ -146,7 +146,7 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("qr_read cmd: " . $decodedData . " time:" . $elapsed);
 					//
-					return ;
+					//return ;
 
 					/*
 					//use Zxing\QrReader;
