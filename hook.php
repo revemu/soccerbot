@@ -105,7 +105,7 @@ foreach ($client->parseEvents() as $event) {
 					$elapsed = $end_time - $start_time ;
 					$log->putLog("read qr api time:" . $elapsed);
 					//$res = json_decode($apijson) ;
-					$apijson = '{"status":200,"data":{"payload":"004600060000010103002022520250816210339240054672085102TH9104D5EB","transRef":"2025081621033924005467208","date":"2025-08-16T21:03:39+07:00","countryCode":"","amount":{"amount":249,"local":{"amount":0,"currency":""}},"fee":0,"ref1":"","ref2":"","ref3":"","sender":{"bank":{"id":"002","name":"ธนาคารกรุงเทพ","short":"BBL"},"account":{"name":{"en":"PYSIT P"},"bank":{"type":"BANKAC","account":"086-0-xxx588"}}},"receiver":{"bank":{},"account":{"name":{"th":"นาย เศรษฐ ว","en":"SAGE"},"proxy":{"type":"MSISDN","account":"085-xxx-5894"}}}}}' ;
+					//$apijson = '{"status":200,"data":{"payload":"004600060000010103002022520250816210339240054672085102TH9104D5EB","transRef":"2025081621033924005467208","date":"2025-08-16T21:03:39+07:00","countryCode":"","amount":{"amount":249,"local":{"amount":0,"currency":""}},"fee":0,"ref1":"","ref2":"","ref3":"","sender":{"bank":{"id":"002","name":"ธนาคารกรุงเทพ","short":"BBL"},"account":{"name":{"en":"PYSIT P"},"bank":{"type":"BANKAC","account":"086-0-xxx588"}}},"receiver":{"bank":{},"account":{"name":{"th":"นาย เศรษฐ ว","en":"SAGE"},"proxy":{"type":"MSISDN","account":"085-xxx-5894"}}}}}' ;
 					$res = json_decode($apijson1) ;
 					$res = json_decode($res) ;
 					$log->putLog(print_r($res,true));
