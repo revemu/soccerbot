@@ -137,7 +137,7 @@ foreach ($client->parseEvents() as $event) {
 					//$data = base64_encode($imageData);
 					
 					//use Zxing CMD;
-					//$start_time = microtime(TRUE);
+					$start_time = microtime(TRUE);
 					$command = "zbarimg -q --raw " . $filePath;
     				$decodedData = shell_exec($command);
 					$ws = "\n";
