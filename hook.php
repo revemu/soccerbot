@@ -107,7 +107,7 @@ foreach ($client->parseEvents() as $event) {
 					$res = json_decode($apijson) ;
 					$log->putLog($res);
 					$decodedData = "" ;
-					if ($res->data->payload) {
+					if ($res->status == 200) {
 						//$decodedData = $res->data->payload ;
 						//$log->putLog($decodedData);
 						//$log->putLog($apijson);
